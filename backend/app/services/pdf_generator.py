@@ -34,7 +34,7 @@ def generate_summary_pdf(data) -> bytes:
     Returns valid PDF bytes in all cases (empty sections, missing flashcards, etc.)
     """
     logger.info("PDF generation starting")
-    print("📄 PDF GENERATION START")
+    print("[PDF GENERATION START]")
 
     pdf = SummaryPDF()
     pdf.set_auto_page_break(auto=True, margin=22)
@@ -140,7 +140,7 @@ def generate_summary_pdf(data) -> bytes:
         pdf_bytes = pdf_output  # already bytes
 
     logger.info("PDF generation succeeded, size=%d bytes", len(pdf_bytes))
-    print(f"✅ PDF GENERATION SUCCESS — {len(pdf_bytes)} bytes")
+    print(f"[PDF GENERATION SUCCESS] - {len(pdf_bytes)} bytes")
 
     return pdf_bytes
 
