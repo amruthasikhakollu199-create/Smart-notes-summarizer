@@ -13,15 +13,10 @@ app = FastAPI(
 # CORS — allows the React frontend (localhost:5173) to call this API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:3000",
-        "https://smart-notes-summarizer-amrutha-sikhakollu-s-projects.vercel.app",
-    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_origins=["*"]  # Trust all origins
 )
 # Register all route groups under /api prefix
 app.include_router(summarize.router, prefix="/api", tags=["Summary"])
