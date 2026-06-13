@@ -10,7 +10,7 @@ export async function downloadSummaryPdf(summaryData, title = "Study Notes Summa
     mode: summaryData.mode,
   };
 
-  const response = await api.post("/download-pdf", payload, {
+  const response = await api.post("/api/download-pdf", payload, {
     responseType: "blob",
   });
 
