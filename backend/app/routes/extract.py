@@ -8,7 +8,7 @@ router = APIRouter()
 MAX_SIZE_BYTES = settings.max_pdf_size_mb * 1024 * 1024
 
 
-@router.post("/api/extract-pdf", response_model=ExtractResponse)
+@router.post("/extract-pdf", response_model=ExtractResponse)
 async def extract_pdf(file: UploadFile = File(...)):
     """
     Extract text content from an uploaded PDF file.
