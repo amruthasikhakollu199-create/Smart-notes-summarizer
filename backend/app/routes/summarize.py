@@ -6,7 +6,7 @@ from app.services.groq_service import generate_summary
 router = APIRouter()
 
 
-@router.post("/summarize", response_model=SummaryResponse)
+@router.post("/api/summarize", response_model=SummaryResponse)
 async def summarize_text(request: SummarizeRequest):
     """
     Summarize text using Groq API.
