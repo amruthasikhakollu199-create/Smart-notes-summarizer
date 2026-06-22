@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSummarizer } from "../hooks/useSummarizer";
 import InputTabs from "../components/input/InputTabs";
 import NotesPasteInput from "../components/input/NotesPasteInput";
@@ -16,8 +16,21 @@ export default function SummarizerPage() {
   const [activeTab, setActiveTab] = useState("text");
   const [text, setText] = useState("");
   const [noteTitle, setNoteTitle] = useState("");
+  const [slowLoading, setSlowLoading] = useState(false);
+  const slowTimerRef = useRef(null);
 
   const { result, isLoading, error, mode, setMode, run, reset } = useSummarizer();
+
+  // Show "server waking up" hint after 10s of loading
+  useEffect(() => {
+    if (isLoading) {
+      slowTimerRef.current = setTimeout(() => setSlowLoading(true), 10000);
+    } else {
+      clearTimeout(slowTimerRef.current);
+      setSlowLoading(false);
+    }
+    return () => clearTimeout(slowTimerRef.current);
+  }, [isLoading]);
 
   const handlePdfExtracted = (extractedText) => {
     setText(extractedText);
@@ -137,16 +150,28 @@ export default function SummarizerPage() {
 
           {/* Loading state */}
           {isLoading && (
-            <div className="flex flex-col items-center justify-center min-h-[420px] rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 gap-4">
+            <div className="flex flex-col items-center justify-center min-h-[420px] rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 gap-4 p-8">
               <Spinner size="lg" className="text-primary-500" />
               <div className="text-center">
                 <p className="text-base font-semibold text-gray-700 dark:text-gray-300">
                   Generating Study Material
                 </p>
                 <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
-                   Llama 3.3 is analyzing your notes...
+                  Llama 3.3 is analyzing your notes...
                 </p>
               </div>
+              {/* Cold start hint — appears after 10s */}
+              {slowLoading && (
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 max-w-sm text-left">
+                  <span className="text-xl flex-shrink-0">☕</span>
+                  <div>
+                    <p className="text-sm font-semibold text-amber-700 dark:text-amber-400">Server is waking up</p>
+                    <p className="text-xs text-amber-600 dark:text-amber-300 mt-0.5">
+                      The backend was asleep. It takes up to 60 seconds to start — please keep waiting!
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
