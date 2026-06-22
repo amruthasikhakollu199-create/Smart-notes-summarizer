@@ -7,8 +7,8 @@ class Settings(BaseSettings):
     Application settings loaded from environment variables or .env file.
     All settings here correspond to variables in your .env file.
     """
-    gemini_api_key: str
-    gemini_model: str = "gemini-2.5-flash"
+    groq_api_key: str
+    groq_model: str = "llama-3.3-70b-versatile"
     max_pdf_size_mb: int = 10
     app_env: str = "development"
 

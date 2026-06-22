@@ -113,7 +113,7 @@ export default function SummarizerPage() {
           {isLoading && (
             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
               <Spinner size="sm" className="text-primary-500" />
-              <span>Gemini AI is thinking... this may take 15–30 seconds.</span>
+              <span> Llama 3.3 is thinking...</span>
             </div>
           )}
         </div>
@@ -144,7 +144,7 @@ export default function SummarizerPage() {
                   Generating Study Material
                 </p>
                 <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
-                  Gemini AI is analyzing your notes...
+                   Llama 3.3 is analyzing your notes...
                 </p>
               </div>
             </div>

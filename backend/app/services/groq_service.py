@@ -1,37 +1,56 @@
-import google.generativeai as genai
+from groq import AsyncGroq, APIError
 import json
 import re
+import logging
 from app.utils.config import settings
 from app.utils.prompts import get_prompt
 from app.models.responses import SummaryResponse, Flashcard
 
-# Configure Gemini with API key once at module load
-genai.configure(api_key=settings.gemini_api_key)
+logger = logging.getLogger(__name__)
+
+
+def _get_client():
+    api_key = settings.groq_api_key
+    if not api_key or api_key in ("gsk_placeholder", "your_groq_api_key_here"):
+        raise ValueError("GROQ_API_KEY is not configured or is a placeholder. Please set a valid Groq API Key.")
+    return AsyncGroq(api_key=api_key)
 
 
 async def generate_summary(text: str, mode: str) -> SummaryResponse:
     """
-    Call Google Gemini API to generate a structured summary.
+    Call Groq API to generate a structured summary.
     Returns summary, key points, keywords, and flashcards.
     """
-    model = genai.GenerativeModel(
-        model_name=settings.gemini_model,
-        generation_config=genai.types.GenerationConfig(
-            temperature=0.4,
-            top_p=0.95,
-            top_k=40,
-        )
-    )
+    if not text.strip():
+        raise ValueError("Input text cannot be empty.")
 
+    client = _get_client()
     prompt = get_prompt(mode=mode, text=text)
 
-    # Call Gemini (synchronous SDK wrapped in async route)
-    response = model.generate_content(prompt)
+    try:
+        completion = await client.chat.completions.create(
+            model=settings.groq_model,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            temperature=0.4,
+            response_format={"type": "json_object"}
+        )
+    except APIError as e:
+        logger.error(f"Groq API Error: {str(e)}", exc_info=True)
+        raise RuntimeError(f"Groq API Error: {str(e)}")
+    except Exception as e:
+        logger.error(f"Failed to communicate with Groq: {str(e)}", exc_info=True)
+        raise RuntimeError(f"Failed to communicate with AI Service: {str(e)}")
 
-    if not response.text:
-        raise ValueError("Gemini returned an empty response. Please try again.")
+    raw_response = completion.choices[0].message.content
+    if not raw_response:
+        raise ValueError("Groq returned an empty response. Please try again.")
 
-    data = _parse_gemini_response(response.text)
+    data = _parse_groq_response(raw_response)
 
     # Build typed Flashcard objects
     flashcards = []
@@ -54,9 +73,9 @@ async def generate_summary(text: str, mode: str) -> SummaryResponse:
     )
 
 
-def _parse_gemini_response(raw_text: str) -> dict:
+def _parse_groq_response(raw_text: str) -> dict:
     """
-    Extract and parse JSON from Gemini's response.
+    Extract and parse JSON from Groq's response.
     Handles markdown code fences and extra surrounding text.
     """
     cleaned = raw_text.strip()

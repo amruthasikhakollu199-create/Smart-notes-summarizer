@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from app.models.requests import SummarizeRequest
 from app.models.responses import SummaryResponse
-from app.services.gemini_service import generate_summary
+from app.services.groq_service import generate_summary
 
 router = APIRouter()
 
@@ -9,7 +9,7 @@ router = APIRouter()
 @router.post("/summarize", response_model=SummaryResponse)
 async def summarize_text(request: SummarizeRequest):
     """
-    Summarize text using Google Gemini API.
+    Summarize text using Groq API.
     Returns summary, key points, keywords, and flashcards.
     """
     if not request.text.strip():

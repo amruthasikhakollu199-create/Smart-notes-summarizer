@@ -17,7 +17,7 @@ class InvalidFileTypeError(HTTPException):
         )
 
 
-class GeminiAPIError(HTTPException):
+class GroqAPIError(HTTPException):
     def __init__(self, message: str = "AI summarization failed"):
         super().__init__(
             status_code=503,
