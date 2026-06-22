@@ -8,7 +8,7 @@ export default function Footer() {
           <div className="flex items-center gap-2">
             <span className="text-xl">🧠</span>
             <span className="text-gray-600 dark:text-gray-400 text-sm">
-              Smart Notes AI — Powered by Google Gemini
+              Smart Notes AI — Powered by Groq
             </span>
           </div>
           <p className="text-gray-400 dark:text-gray-500 text-sm">

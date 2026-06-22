@@ -1,7 +1,7 @@
 import api from "./api";
 
 export async function summarizeText(text, mode = "medium") {
-  const response = await api.post("/api/api/summarize", { text, mode });
+  const response = await api.post("/summarize", { text, mode });
   return response.data;
 }
 
