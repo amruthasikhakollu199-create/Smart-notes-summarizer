@@ -126,7 +126,7 @@ export default function SummarizerPage() {
           {isLoading && (
             <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
               <Spinner size="sm" className="text-primary-500" />
-              <span> Llama 3.3 is thinking...</span>
+              <span> Groq is thinking...</span>
             </div>
           )}
         </div>
@@ -157,7 +157,7 @@ export default function SummarizerPage() {
                   Generating Study Material
                 </p>
                 <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
-                  Llama 3.3 is analyzing your notes...
+                  Groq is analyzing your notes...
                 </p>
               </div>
               {/* Cold start hint — appears after 10s */}
